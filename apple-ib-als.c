@@ -490,8 +490,12 @@ static int appleals_config_iio(struct appleals_device *als_dev)
 	#if LINUX_VERSION_CODE < KERNEL_VERSION(5,14,0)
 	iio_trig = devm_iio_trigger_alloc(parent, "%s-dev%d", iio_dev->name,
 					  iio_dev->id);
-	#else
+	#endif
+	#if LINUX_VERSION_CODE < KERNEL_VERSION(6,2,0)
 	iio_trig = devm_iio_trigger_alloc(parent, "%s-dev%d", 
+					  iio_dev->name);
+	#else
+	iio_trig = devm_iio_trigger_alloc(parent, "%s-dev%p", 
 					  iio_dev->name);
 	#endif
 	if (!iio_trig)
@@ -574,8 +578,6 @@ static int appleals_probe(struct hid_device *hdev,
 	hid_device_io_stop(hdev);
 
 	rc = appleals_config_iio(als_dev);
-	if (rc)
-		return rc;
 
 	return hid_hw_open(hdev);
 }

@@ -630,7 +630,9 @@ MODULE_DEVICE_TABLE(acpi, appleib_acpi_match);
 static struct acpi_driver appleib_driver = {
 	.name		= "apple-ibridge",
 	.class		= "apple_ibridge",
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 10, 0)
 	.owner		= THIS_MODULE,
+#endif
 	.ids		= appleib_acpi_match,
 	.ops		= {
 		.add		= appleib_probe,
